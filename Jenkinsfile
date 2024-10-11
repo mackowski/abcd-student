@@ -32,8 +32,8 @@ pipeline {
             }
             post {
                 always {
-                    sh 'docker cp zap-ci:/zap/wrk/reports/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html'
-                    sh 'docker cp zap-ci:/zap/wrk/reports/zap_xml_report.xml ${WORKSPACE}/results/zap_xml_report.xml'
+                    sh 'docker cp zap-ci:/zap/wrk/reports/zap_html_report.html ${WORKSPACE}/target/results/zap_html_report.html'
+                    sh 'docker cp zap-ci:/zap/wrk/reports/zap_xml_report.xml ${WORKSPACE}/target/results/zap_xml_report.xml'
                     sh 'docker stop zap-ci juice-shop-ci'
                     
                     defectDojoPublisher(artifact: 'results/zap_xml_report.xml', 
