@@ -20,11 +20,11 @@ pipeline {
         }
         stage('[OSV] SCA Scan') {
             steps {
-                sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/sca-osv-scanner.json'
+                sh 'osv-scanner scan --lockfile package-lock.json --format json --output ${WORKSPACE}/sca-osv-scanner.json'
             }
             post {
                 always {
-                    defectDojoPublisher(artifact: 'results/sca-osv-scanner.json', 
+                    defectDojoPublisher(artifact: 'sca-osv-scanner.json', 
                         productName: 'Juice Shop', 
                         scanType: 'OSV Scan', 
                         engagementName: 'jakub.mackowski@relativity.com')
