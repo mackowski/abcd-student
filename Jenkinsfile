@@ -18,6 +18,21 @@ pipeline {
                 sh 'ls -la'
             }
         }
+
+        stage('[trufflehog] Secrets Scan') {
+            steps {
+                sh 'trufflehog git file://. --branch=main --json > ${WORKSPACE}/secrets-trufflehog-scanner.json'
+            }
+            post {
+                always {
+                    defectDojoPublisher(artifact: 'secrets-trufflehog-scanner.json', 
+                        productName: 'Juice Shop', 
+                        scanType: 'Trufflehog Scan', 
+                        engagementName: 'jakub.mackowski@relativity.com')
+                }
+            }
+        }
+        
         stage('[OSV] SCA Scan') {
             steps {
                 sh 'osv-scanner scan --lockfile package-lock.json --format json --output ${WORKSPACE}/sca-osv-scanner.json'
