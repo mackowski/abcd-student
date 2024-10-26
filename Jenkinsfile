@@ -19,6 +19,20 @@ pipeline {
             }
         }
 
+        stage('[Semgrep] SAST Scan') {
+            steps {
+                sh 'semgrep scan --config auto --json-output=${WORKSPACE}/sast-scan.json'
+            }
+            post {
+                always {
+                    defectDojoPublisher(artifact: 'sast-scan.json', 
+                        productName: 'Juice Shop', 
+                        scanType: 'Semgrep JSON Report', 
+                        engagementName: 'jakub.mackowski@relativity.com')
+                }
+            }
+        }
+
         stage('[trufflehog] Secrets Scan') {
             steps {
                 sh 'trufflehog git file://. --branch=main --json > ${WORKSPACE}/secrets-trufflehog-scanner.json'
